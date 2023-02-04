@@ -11,9 +11,15 @@ const main = async () => {
   //  call get waves function from deployed contract
   await waveContract.getWaves();
 
-  //  send a wave transaction
-  const waveTxn = await waveContract.wave();
-  await waveTxn.wait();
+  //  send a wave transaction with owner's address
+  const firstWaveTxn = await waveContract.wave();
+  await firstWaveTxn.wait();
+
+  await waveContract.getWaves();
+
+  //  send a wave from another address
+  const secondWaveTxn = await waveContract.connect(randomPerson).wave();
+  await secondWaveTxn.wait();
 
   await waveContract.getWaves();
 };
