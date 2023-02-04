@@ -8,7 +8,7 @@ contract WavePortal {
 
     uint256 totalWaves;
 
-    constructor() { console.log('I am a simple smart contract');         
+    constructor() { console.log('Smart contract is being constructed.');         
     }
 
     function wave () public {
