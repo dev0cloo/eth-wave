@@ -45,19 +45,15 @@ function App() {
             Connect your Ethereum wallet and send me a message!
           </p>
 
-          <button
-            className="btn 
-flex justify-center cursor-pointer bg-200 bg-btngrad text-white min-w-[60%] text-xl p-4 rounded mt-4
-"
-          >
+          <button className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right">
             Connect Wallet
           </button>
-          <button className="btn bg-200 bg-btngrad flex justify-center cursor-pointer text-white min-w-[60%] text-xl p-4 rounded mt-4">
+          <button className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right">
             Contact Me
           </button>
         </div>
       </div>
-      <div className="absolute bottom-0 inset-x-0 transform-gpu overflow-hidden blur-3xl sm:blur-la">
+      <div className="absolute -z-10 bottom-0 inset-x-0 transform-gpu overflow-hidden blur-3xl sm:blur-la">
         <svg
           className="w-full"
           viewBox="0 0 1155 678"
