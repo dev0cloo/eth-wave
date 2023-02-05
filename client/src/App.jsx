@@ -2,49 +2,49 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import "./App.css";
 
-const getEthereumObject = () => window.ethereum;
-
-/*
- * This function returns the first linked account found.
- * If there is no account linked, it will return null.
- */
-const findMetamaskAccounts = async () => {
-  try {
-    const ethereum = getEthereumObject();
-
-    // check if metamask is installed
-    if (!ethereum) {
-      console.error("Make sure you have metamask installed!");
-      return null;
-    }
-
-    console.log("We have the ethereum object", ethereum);
-
-    // get accounts
-    const accounts = await ethereum.request({ method: "eth_accounts" });
-
-    // use the first account if it exists
-    if (accounts.length !== 0) {
-      const account = accounts[0];
-      console.log("Found an authorized account:", account);
-      return account;
-    } else {
-      console.error("No authorized account found");
-      return null;
-    }
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
 
+  /*
+   * This function returns the first linked account found.
+   * If there is no account linked, it will return null.
+   */
+  const checkIfWalletIsConnected = async () => {
+    try {
+      // deconstruct ethereum object. same as ethereum = window.ethereum
+      const { ethereum } = window;
+
+      // check if metamask is installed
+      if (!ethereum) {
+        console.error("Make sure you have metamask installed!");
+        return null;
+      }
+
+      console.log("We have the ethereum object", ethereum);
+
+      // get accounts
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      // use the first account if it exists
+      if (accounts.length !== 0) {
+        const account = accounts[0];
+        console.log("Found an authorized account:", account);
+        setCurrentAccount(account);
+      } else {
+        console.error("No authorized account found");
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
   const connectWallet = async () => {
     try {
-      const ethereum = getEthereumObject();
-
+      const { ethereum } = window;
       if (!ethereum) {
         alert("Make sure you have metamask installed!");
         return;
@@ -60,14 +60,9 @@ const App = () => {
     }
   };
 
-  //
+  //prompt metamask connection on page load
   useEffect(() => {
-    async () => {
-      const account = await findMetamaskAccounts();
-      if (account !== null) {
-        setCurrentAccount(account);
-      }
-    };
+    checkIfWalletIsConnected();
   }, []);
 
   return (
