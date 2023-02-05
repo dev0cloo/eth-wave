@@ -47,12 +47,12 @@ function App() {
 
           <button
             className="btn 
-flex justify-center cursor-pointer text-white min-w-[60%] text-xl p-4 rounded mt-4
+flex justify-center cursor-pointer bg-200 bg-btngrad text-white min-w-[60%] text-xl p-4 rounded mt-4
 "
           >
             Connect Wallet
           </button>
-          <button className="btn flex justify-center cursor-pointer text-white min-w-[60%] text-xl p-4 rounded mt-4">
+          <button className="btn bg-200 bg-btngrad flex justify-center cursor-pointer text-white min-w-[60%] text-xl p-4 rounded mt-4">
             Contact Me
           </button>
         </div>

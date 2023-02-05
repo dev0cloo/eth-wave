@@ -1,11 +1,4 @@
 .btn {
-  background-image: linear-gradient(
-    to right,
-    #2b5876 0%,
-    #65626f 51%,
-    #2b5876 100%
-  );
-  background-size: 200% auto;
   transition: all 0.5s ease-out;
 }
 
