@@ -6,8 +6,8 @@ function App() {
   const [wave, setWave] = useState(0);
 
   return (
-    <div className="isolate bg-gray-900 h-screen flex">
-      <div className="relative inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem] sm:blur-la">
+    <div className="isolate bg-white dark:bg-gray-900 h-screen flex">
+      <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem] sm:blur-la">
         <svg
           className="w-full left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
           viewBox="0 0 1155 678"
@@ -32,6 +32,30 @@ function App() {
             </linearGradient>
           </defs>
         </svg>
+      </div>
+      {/* ================ MAIN PAGE CONTENT ====================*/}
+      <div className="mainContainer flex mx-auto max-w-[80%]">
+        <div className="dataContainer flex flex-col gap-4 justify-center items-center">
+          <h1 className="header text-slate-600 dark:text-slate-200 text-center text-2xl font-bold">
+            👋 Hey there!
+          </h1>
+
+          <p className="text-slate-600 dark:text-slate-300 text-center">
+            I am Etornam and I write smart contracts. That's pretty cool, right?
+            Connect your Ethereum wallet and send me a message!
+          </p>
+
+          <button
+            className="btn 
+flex justify-center cursor-pointer text-white min-w-[60%] text-xl p-4 rounded mt-4
+"
+          >
+            Connect Wallet
+          </button>
+          <button className="btn flex justify-center cursor-pointer text-white min-w-[60%] text-xl p-4 rounded mt-4">
+            Contact Me
+          </button>
+        </div>
       </div>
       <div className="absolute bottom-0 inset-x-0 transform-gpu overflow-hidden blur-3xl sm:blur-la">
         <svg
