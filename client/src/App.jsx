@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import abi from "./utils/WavePortal.json";
 import "./App.css";
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
-
+  // variable for storing the contract location on the blockchain
+  const contractAddress = "0x7D4a142ee17a9769Df5E5C0b70d6fd49A6CAD5b7";
+  // variable for referencing contract ABI content
+  const contractABI = abi.abi;
   /*
    * This function returns the first linked account found.
    * If there is no account linked, it will return null.
@@ -42,6 +46,7 @@ const App = () => {
     }
   };
 
+  // function to connect wallet manually
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
@@ -55,6 +60,32 @@ const App = () => {
       });
       setCurrentAccount(accounts[0]);
       console.log("Connected", accounts[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // this function connects frontend to contract through ether.js
+  // it fetches the total number of waves in the contract
+  const wave = async () => {
+    try {
+      const { ethereum } = window;
+      console.log("the object exists", ethereum);
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
+
+        let count = await wavePortalContract.getTotalWaves();
+
+        console.log("Retrieved total wave count...", count.toNumber());
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -97,10 +128,11 @@ const App = () => {
       {/* ================ MAIN PAGE CONTENT ====================*/}
       <div className="mainContainer flex mx-auto max-w-[80%]">
         <div className="dataContainer flex flex-col gap-4 justify-center items-center">
-          <h1 className="header text-slate-600 dark:text-slate-200 text-center text-2xl font-bold">
+          <h1 className="header text-slate-600 dark:text-slate-200 text-center text-2xl sm:text-4xl sm:mb-6 font-bold">
             👋 Hey there!
           </h1>
-          <p className="text-slate-600 dark:text-slate-300 text-center">
+
+          <p className="text-slate-600 dark:text-slate-300 text-center sm:text-2xl">
             I am Etornam and I write smart contracts. That's pretty cool, right?
             Connect your Ethereum wallet and send me a message!
           </p>
@@ -115,7 +147,10 @@ const App = () => {
               Connect Wallet
             </button>
           )}
-          <button className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right">
+          <button
+            className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right"
+            onClick={wave}
+          >
             Contact Me
           </button>
         </div>
