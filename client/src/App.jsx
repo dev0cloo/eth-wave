@@ -1,9 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import "./App.css";
 
-function App() {
-  const [wave, setWave] = useState(0);
+const getEthereumObject = () => window.ethereum;
+
+/*
+ * This function returns the first linked account found.
+ * If there is no account linked, it will return null.
+ */
+const findMetamaskAccounts = async () => {
+  try {
+    const ethereum = getEthereumObject();
+
+    // check if metamask is installed
+    if (!ethereum) {
+      console.error("Make sure you have metamask installed!");
+      return null;
+    }
+
+    console.log("We have the ethereum object", ethereum);
+
+    // get accounts
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+
+    // use the first account if it exists
+    if (accounts.length !== 0) {
+      const account = accounts[0];
+      console.log("Found an authorized account:", account);
+      return account;
+    } else {
+      console.error("No authorized account found");
+      return null;
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const App = () => {
+  const [currentAccount, setCurrentAccount] = useState("");
+
+  const connectWallet = async () => {
+    try {
+      const ethereum = getEthereumObject();
+
+      if (!ethereum) {
+        alert("Make sure you have metamask installed!");
+        return;
+      }
+
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setCurrentAccount(accounts[0]);
+      console.log("Connected", accounts[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //
+  useEffect(() => {
+    async () => {
+      const account = await findMetamaskAccounts();
+      if (account !== null) {
+        setCurrentAccount(account);
+      }
+    };
+  }, []);
 
   return (
     <div className="isolate bg-white dark:bg-gray-900 h-screen flex">
@@ -33,26 +98,35 @@ function App() {
           </defs>
         </svg>
       </div>
+
       {/* ================ MAIN PAGE CONTENT ====================*/}
       <div className="mainContainer flex mx-auto max-w-[80%]">
         <div className="dataContainer flex flex-col gap-4 justify-center items-center">
           <h1 className="header text-slate-600 dark:text-slate-200 text-center text-2xl font-bold">
             👋 Hey there!
           </h1>
-
           <p className="text-slate-600 dark:text-slate-300 text-center">
             I am Etornam and I write smart contracts. That's pretty cool, right?
             Connect your Ethereum wallet and send me a message!
           </p>
-
-          <button className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right">
-            Connect Wallet
-          </button>
+          {/*
+           * If there is no currentAccount render this button
+           */}
+          {!currentAccount && (
+            <button
+              className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right"
+              onClick={connectWallet}
+            >
+              Connect Wallet
+            </button>
+          )}
           <button className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right">
             Contact Me
           </button>
         </div>
       </div>
+
+      {/* =========================END OF MAIN CONTENT====================== */}
       <div className="absolute -z-10 bottom-0 inset-x-0 transform-gpu overflow-hidden blur-3xl sm:blur-la">
         <svg
           className="w-full"
@@ -81,6 +155,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
