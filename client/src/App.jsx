@@ -6,7 +6,7 @@ import "./App.css";
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   // variable for storing the contract location on the blockchain
-  const contractAddress = "0x7D4a142ee17a9769Df5E5C0b70d6fd49A6CAD5b7";
+  const contractAddress = "0xD092AAfA50F66eB719443eB104043764b5487fb4";
   // variable for referencing contract ABI content
   const contractABI = abi.abi;
   /*
