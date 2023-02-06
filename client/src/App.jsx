@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import abi from "./utils/WavePortal.json";
+import abi from "./utils/MessagePortal.json";
 import "./App.css";
 
 const App = () => {
@@ -66,31 +66,28 @@ const App = () => {
   };
 
   // this function connects frontend to contract through ethers.js
-  const wave = async () => {
+  const message = async () => {
     try {
       const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const wavePortalContract = new ethers.Contract(
+        const messagePortalContract = new ethers.Contract(
           contractAddress,
           contractABI,
           signer
         );
+        const messageTxn = await messagePortalContract.sendMessage(
+          "A test message for the live site"
+        );
+        console.log("Mining...", messageTxn.hash);
+        await messageTxn.wait();
+        console.log("Mined -- ", messageTxn.hash);
 
-        // fetch the total number of waves in the contract
-        let count = await wavePortalContract.getWaves();
+        // fetch the messages in the contract
+        let messages = await messagePortalContract.getMessages();
 
-        console.log("Retrieved total wave count...", count.toNumber());
-        // sends a transaction to the contract to increment the wave count
-        const waveTxn = await wavePortalContract.wave();
-
-        console.log("Mining...", waveTxn.hash);
-        await waveTxn.wait();
-        console.log("Mined -- ", waveTxn.hash);
-
-        count = await wavePortalContract.getWaves();
-        console.log("Retrieved total wave count...", count.toNumber());
+        console.log("Retrieved messages..", messages);
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -157,7 +154,7 @@ const App = () => {
           )}
           <button
             className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right"
-            onClick={wave}
+            onClick={message}
           >
             Contact Me
           </button>
