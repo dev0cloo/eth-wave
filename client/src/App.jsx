@@ -65,12 +65,11 @@ const App = () => {
     }
   };
 
-  // this function connects frontend to contract through ether.js
+  // this function connects frontend to contract through ethers.js
   // it fetches the total number of waves in the contract
   const wave = async () => {
     try {
       const { ethereum } = window;
-      console.log("the object exists", ethereum);
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
@@ -80,14 +79,14 @@ const App = () => {
           signer
         );
 
-        let count = await wavePortalContract.getTotalWaves();
+        let count = await wavePortalContract.getWaves();
 
         console.log("Retrieved total wave count...", count.toNumber());
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
