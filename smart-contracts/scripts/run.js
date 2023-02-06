@@ -8,20 +8,21 @@ const main = async () => {
   console.log("Contract deployed to:", waveContract.address);
   console.log("Contract deployed by:", owner.address);
 
-  //  call get waves function from deployed contract
-  await waveContract.getWaves();
+  //  send a message transaction with owner's address
+  let messageTxn = await waveContract.sendMessage(
+    "Here is a test message from me"
+  );
+  await messageTxn.wait();
 
-  //  send a wave transaction with owner's address
-  const firstWaveTxn = await waveContract.wave();
-  await firstWaveTxn.wait();
+  //  send a message from another address
+  messageTxn = await waveContract
+    .connect(randomPerson)
+    .sendMessage("A random message");
+  await messageTxn.wait();
 
-  await waveContract.getWaves();
-
-  //  send a wave from another address
-  const secondWaveTxn = await waveContract.connect(randomPerson).wave();
-  await secondWaveTxn.wait();
-
-  await waveContract.getWaves();
+  //  call get messages function from deployed contract
+  let allMessages = await waveContract.getMessages();
+  console.log(allMessages);
 };
 
 const runMain = async () => {
