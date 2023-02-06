@@ -2,9 +2,15 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "./utils/MessagePortal.json";
 import "./App.css";
+// import function to register Swiper custom elements
+import { register } from "swiper/element/bundle";
 
 const App = () => {
+  // register Swiper custom elements
+  register();
   const [currentAccount, setCurrentAccount] = useState("");
+  const [allMessages, setAllMessages] = useState([]);
+
   // variable for storing the contract location on the blockchain
   const contractAddress = "0xD092AAfA50F66eB719443eB104043764b5487fb4";
   // variable for referencing contract ABI content
@@ -40,6 +46,8 @@ const App = () => {
         console.error("No authorized account found");
         return null;
       }
+
+      getAllMessages();
     } catch (error) {
       console.error(error);
       return null;
@@ -83,13 +91,41 @@ const App = () => {
         console.log("Mining...", messageTxn.hash);
         await messageTxn.wait();
         console.log("Mined -- ", messageTxn.hash);
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  // function to get all messages from the contract
+  const getAllMessages = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const messagePortalContract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          signer
+        );
         // fetch the messages in the contract
         let messages = await messagePortalContract.getMessages();
 
-        console.log("Retrieved messages..", messages);
-      } else {
-        console.log("Ethereum object doesn't exist!");
+        let messagesParsed = [];
+        // loop through messages and extract the address, messages and timestamps
+        messages.forEach((message) => {
+          messagesParsed.push({
+            address: message.messenger,
+            message: message.textMessage,
+            date: new Date(message.timestamp * 1000),
+          });
+        });
+        console.log("messagesParsed:", messagesParsed);
+        // store messages in react state
+        setAllMessages(messagesParsed);
       }
     } catch (error) {
       console.log(error);
@@ -102,7 +138,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="isolate bg-white dark:bg-gray-900 h-screen flex">
+    <div className="isolate bg-white dark:bg-gray-900 h-screen">
       <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem] sm:blur-la">
         <svg
           className="w-full left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
@@ -129,7 +165,6 @@ const App = () => {
           </defs>
         </svg>
       </div>
-
       {/* ================ MAIN PAGE CONTENT ====================*/}
       <div className="mainContainer flex mx-auto max-w-[80%]">
         <div className="dataContainer flex flex-col gap-4 justify-center items-center">
@@ -158,9 +193,31 @@ const App = () => {
           >
             Contact Me
           </button>
+
+          {/* RENDER TRANSACTIONS */}
+          {allMessages.map((message, index) => {
+            return (
+              <div
+                key={index}
+                className="w-full p-2 mt-1 text-center text-white rounded shadow-md"
+              >
+                <div className="break-all w-full ">
+                  <label className="block font-bold">Address:</label>
+                  <span>{message.address}</span>
+                </div>
+                <div className="w-full">
+                  <label className="block font-bold">Message:</label>
+                  <span>{message.message}</span>
+                </div>
+                <div className="w-full">
+                  <label className="block font-bold">Date:</label>
+                  <span>{message.date.toLocaleString()}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-
       {/* =========================END OF MAIN CONTENT====================== */}
       <div className="absolute -z-10 bottom-0 inset-x-0 transform-gpu overflow-hidden blur-3xl sm:blur-la">
         <svg
