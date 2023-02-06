@@ -66,7 +66,6 @@ const App = () => {
   };
 
   // this function connects frontend to contract through ethers.js
-  // it fetches the total number of waves in the contract
   const wave = async () => {
     try {
       const { ethereum } = window;
@@ -79,10 +78,11 @@ const App = () => {
           signer
         );
 
+        // fetch the total number of waves in the contract
         let count = await wavePortalContract.getWaves();
 
         console.log("Retrieved total wave count...", count.toNumber());
-
+        // sends a transaction to the contract to increment the wave count
         const waveTxn = await wavePortalContract.wave();
 
         console.log("Mining...", waveTxn.hash);
