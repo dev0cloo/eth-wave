@@ -5,11 +5,13 @@ const main = async () => {
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Contract owner balance is:", accountBalance.toString());
 
-  const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-  const waveContract = await waveContractFactory.deploy();
-  await waveContract.deployed();
+  const messageContractFactory = await hre.ethers.getContractFactory(
+    "MessagePortal"
+  );
+  const messageContract = await messageContractFactory.deploy();
+  await messageContract.deployed();
 
-  console.log("Wave Portal deployed at:", waveContract.address);
+  console.log("Message Portal deployed at:", messageContract.address);
 };
 
 const runMain = async () => {

@@ -22,7 +22,7 @@ contract MessagePortal {
 
     // let users send messages to the contract
     function sendMessage(string memory _message) public {
-        console.log("%s has waved", msg.sender, _message);
+        console.log("%s has sent a message: %s", msg.sender, _message);
         // log the message to messages array
         message.push(Messages(msg.sender, _message, block.timestamp));
 
