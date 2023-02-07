@@ -4,55 +4,37 @@ import abi from "./utils/MessagePortal.json";
 import "./App.css";
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";
+import { checkIfWalletIsConnected, getAllMessages } from "./components";
 
 const App = () => {
   // register Swiper custom elements
   register();
+  // react hooks for dynamic events
   const [currentAccount, setCurrentAccount] = useState("");
   const [allMessages, setAllMessages] = useState([]);
+  // const [isConnected, setIsConnected] = useState[null];
 
-  // variable for storing the contract location on the blockchain
+  // the contract location on the blockchain
   const contractAddress = "0xD092AAfA50F66eB719443eB104043764b5487fb4";
   // variable for referencing contract ABI content
   const contractABI = abi.abi;
-  /*
-   * This function returns the first linked account found.
-   * If there is no account linked, it will return null.
-   */
-  const checkIfWalletIsConnected = async () => {
-    try {
-      // deconstruct ethereum object. same as ethereum = window.ethereum
-      const { ethereum } = window;
 
-      // check if metamask is installed
-      if (!ethereum) {
-        console.error("Make sure you have metamask installed!");
-        return null;
-      }
+  //prompt metamask connection on page load
+  useEffect(() => {
+    checkIfWalletIsConnected().then((account) => {
+      setCurrentAccount(account);
+    });
+  }, []);
 
-      console.log("We have the ethereum object", ethereum);
+  // useEffect(() => {
+  //   getAllMessages(contractAddress, contractABI).then((allMessages) => {
+  //     setAllMessages(allMessages);
+  //   });
+  // });
 
-      // get accounts
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      // use the first account if it exists
-      if (accounts.length !== 0) {
-        const account = accounts[0];
-        console.log("Found an authorized account:", account);
-        setCurrentAccount(account);
-      } else {
-        console.error("No authorized account found");
-        return null;
-      }
-
-      getAllMessages();
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
+  // function handleConnection(isConnected) {
+  //   setIsConnected();
+  // }
 
   // function to connect wallet manually
   const connectWallet = async () => {
@@ -99,46 +81,8 @@ const App = () => {
     }
   };
 
-  // function to get all messages from the contract
-  const getAllMessages = async () => {
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const messagePortalContract = new ethers.Contract(
-          contractAddress,
-          contractABI,
-          signer
-        );
-        // fetch the messages in the contract
-        let messages = await messagePortalContract.getMessages();
-
-        let messagesParsed = [];
-        // loop through messages and extract the address, messages and timestamps
-        messages.forEach((message) => {
-          messagesParsed.push({
-            address: message.messenger,
-            message: message.textMessage,
-            date: new Date(message.timestamp * 1000),
-          });
-        });
-        console.log("messagesParsed:", messagesParsed);
-        // store messages in react state
-        setAllMessages(messagesParsed);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //prompt metamask connection on page load
-  useEffect(() => {
-    checkIfWalletIsConnected();
-  }, []);
-
   return (
-    <div className="isolate bg-white dark:bg-gray-900 h-screen">
+    <div className="isolate h-screen bg-white dark:bg-gray-900 w-full">
       <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem] sm:blur-la">
         <svg
           className="w-full left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
@@ -168,13 +112,13 @@ const App = () => {
       {/* ================ MAIN PAGE CONTENT ====================*/}
       <div className="mainContainer flex mx-auto max-w-[80%]">
         <div className="dataContainer flex flex-col gap-4 justify-center items-center">
-          <h1 className="header text-slate-600 dark:text-slate-200 text-center text-2xl sm:text-4xl sm:mb-6 font-bold">
+          <h1 className="text-slate-600 dark:text-slate-200 text-center text-2xl sm:text-4xl sm:mb-6 font-bold">
             👋 Hey there!
           </h1>
 
           <p className="text-slate-600 dark:text-slate-300 text-center sm:text-2xl">
             I am Etornam and I write smart contracts. That's pretty cool, right?
-            Connect your Ethereum wallet and send me a message!
+            Connect your wallet and send me a message to summon me!
           </p>
           {/*
            * If there is no currentAccount render this button
@@ -199,7 +143,7 @@ const App = () => {
             return (
               <div
                 key={index}
-                className="w-full p-2 mt-1 text-center text-white rounded shadow-md"
+                className="w-full p-2 mt-1 text-center text-slate-600 dark:text-white rounded shadow-md"
               >
                 <div className="break-all w-full ">
                   <label className="block font-bold">Address:</label>
