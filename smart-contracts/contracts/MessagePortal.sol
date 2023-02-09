@@ -16,7 +16,7 @@ contract MessagePortal {
     // create new empty message array from Messages struct
     Messages[] message;
 
-    constructor() {
+    constructor() payable {
         console.log("Smart contract is being constructed.");
     }
 
@@ -28,7 +28,7 @@ contract MessagePortal {
 
         emit newMessage(msg.sender, _message, block.timestamp);
 
-        uint256 prizeAmount = 0.0001 ether;
+        uint256 prizeAmount = 0.1 ether;
         require(
             prizeAmount <= address(this).balance,
             "Not enough funds in the contract to make this transaction"
