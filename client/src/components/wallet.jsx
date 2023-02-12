@@ -33,7 +33,7 @@ export const checkIfWalletIsConnected = async () => {
       return null;
     }
 
-    getAllMessages();
+    // getAllMessages();
   } catch (error) {
     console.error(error);
     return null;
