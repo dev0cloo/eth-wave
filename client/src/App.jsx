@@ -131,12 +131,14 @@ const App = () => {
               Connect Wallet
             </button>
           )}
-          <button
-            className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right"
-            onClick={message}
-          >
-            Contact Me
-          </button>
+          {currentAccount && (
+            <button
+              className="btn shadow-md transition-all duration-300 ease-in bg-200 bg-btngrad flex justify-center text-white min-w-[60%] text-xl p-4 rounded mt-4 hover:bg-center hover:shadow-2xl hover:bg-right"
+              onClick={message}
+            >
+              Summon Me
+            </button>
+          )}
 
           {/* RENDER TRANSACTIONS */}
           {allMessages.map((message, index) => {
