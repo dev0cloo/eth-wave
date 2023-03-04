@@ -5,7 +5,11 @@ const main = async () => {
     "MessagePortal"
   );
   let ownerBalance = await owner.getBalance();
-  console.log("Owner balance is:", ownerBalance);
+  console.log(
+    "Owner balance is:",
+    hre.ethers.utils.formatEther(ownerBalance),
+    "eth"
+  );
 
   const messageContract = await messageContractFactory.deploy({
     value: ethers.utils.parseEther("1"),
@@ -21,11 +25,12 @@ const main = async () => {
   );
   console.log(
     "Contract balance is:",
-    hre.ethers.utils.formatEther(contractBalance)
+    hre.ethers.utils.formatEther(contractBalance),
+    "eth"
   );
   //  send a message transaction with owner's address
   let messageTxn = await messageContract.sendMessage(
-    "Here is a test message from me"
+    "Here is a test message from the owner."
   );
   await messageTxn.wait();
 
@@ -35,13 +40,14 @@ const main = async () => {
   );
   console.log(
     "Contract balance is:",
-    hre.ethers.utils.formatEther(contractBalance)
+    hre.ethers.utils.formatEther(contractBalance),
+    "eth"
   );
 
   //  send a message from another address
   messageTxn = await messageContract
     .connect(randomPerson)
-    .sendMessage("A random message");
+    .sendMessage("A test message from another user");
   await messageTxn.wait();
 
   //  call get messages function from deployed contract
