@@ -13,11 +13,16 @@ contract MessagePortal {
         string textMessage;
         uint256 timestamp;
     }
+
+    uint256 private seed;
     // create new empty message array from Messages struct
     Messages[] message;
 
     constructor() payable {
         console.log("Smart contract is being constructed.");
+
+        // set initial seed
+        seed = (block.timestamp + block.difficulty) % 100;
     }
 
     // let users send messages to the contract
@@ -26,15 +31,24 @@ contract MessagePortal {
         // log the message to messages array
         message.push(Messages(msg.sender, _message, block.timestamp));
 
+        // Generate a new seed for the next user
+        seed = (block.difficulty + block.timestamp + seed) % 100;
+
+        console.log("Random # generated: %d", seed);
+
         emit newMessage(msg.sender, _message, block.timestamp);
 
-        uint256 prizeAmount = 0.1 ether;
-        require(
-            prizeAmount <= address(this).balance,
-            "Not enough funds in the contract to make this transaction"
-        );
-        (bool success, ) = (msg.sender).call{value: prizeAmount}("");
-        require(success, "Failed to withdraw amount from contract");
+        // Give a 50% chance that the user wins the prize
+        if (seed <= 50) {
+            console.log("%s won!", msg.sender);
+            uint256 prizeAmount = 0.00001 ether;
+            require(
+                prizeAmount <= address(this).balance,
+                "Not enough funds in the contract to make this transaction"
+            );
+            (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+            require(success, "Failed to withdraw amount from contract");
+        }
     }
 
     // return all messages in contract storage

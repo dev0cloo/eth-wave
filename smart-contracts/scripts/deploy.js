@@ -8,7 +8,9 @@ const main = async () => {
   const messageContractFactory = await hre.ethers.getContractFactory(
     "MessagePortal"
   );
-  const messageContract = await messageContractFactory.deploy();
+  const messageContract = await messageContractFactory.deploy({
+    value: hre.ethers.utils.parseEther("0.001"),
+  });
   await messageContract.deployed();
 
   console.log("Message Portal deployed at:", messageContract.address);
