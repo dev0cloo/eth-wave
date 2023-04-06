@@ -14,6 +14,8 @@ contract MessagePortal {
         uint256 timestamp;
     }
 
+    mapping(address => uint256) lastMessagedAt;
+
     uint256 private seed;
     // create new empty message array from Messages struct
     Messages[] message;
@@ -27,6 +29,15 @@ contract MessagePortal {
 
     // let users send messages to the contract
     function sendMessage(string memory _message) public {
+        //need to make sure it has been at least 30 seconds before the same user can send a message again
+        require(
+            lastMessagedAt[msg.sender] + 30 seconds < block.timestamp,
+            "Wait 30 seconds!"
+        );
+
+        // set last message to current block time
+        lastMessagedAt[msg.sender] = block.timestamp;
+
         console.log("%s has sent a message: %s", msg.sender, _message);
         // log the message to messages array
         message.push(Messages(msg.sender, _message, block.timestamp));
