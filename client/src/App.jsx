@@ -15,7 +15,7 @@ const App = () => {
   // const [isConnected, setIsConnected] = useState[null];
 
   // the contract location on the blockchain
-  const contractAddress = "0xD092AAfA50F66eB719443eB104043764b5487fb4";
+  const contractAddress = "0xEb2f5a39783801A4eCb719d798cd3218b8Be7a0d";
   // variable for referencing contract ABI content
   const contractABI = abi.abi;
 
