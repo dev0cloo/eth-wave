@@ -68,7 +68,8 @@ const App = () => {
           signer
         );
         const messageTxn = await messagePortalContract.sendMessage(
-          "A test message for the live site"
+          "A test message for the live site",
+          { gaslimit: 300000 }
         );
         console.log("Mining...", messageTxn.hash);
         await messageTxn.wait();
