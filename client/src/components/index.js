@@ -1,6 +1,5 @@
-import CTA from "./CTA";
-import { getAllMessages } from "./messages";
-import { checkIfWalletIsConnected } from "./wallet";
 export { default as Loader } from "./Loader";
-
-export { checkIfWalletIsConnected, getAllMessages };
+export { default as Navbar } from "./Navbar";
+export { default as Footer } from "./Footer";
+export { default as Transactions } from "./Transactions";
+export { default as Welcome } from "./Welcome";
